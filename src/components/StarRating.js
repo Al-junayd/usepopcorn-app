@@ -23,6 +23,11 @@ const StarRating = ({
   const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
 
+  function handleRating(rating) {
+    setRating(rating);
+    onSetRating(rating);
+  }
+
   const textStyle = {
     lineHeight: "1",
     margin: 0,
@@ -39,8 +44,7 @@ const StarRating = ({
             color={color}
             size={size}
             onClick={() => {
-              setRating(i + 1);
-              // onSetRating(rating);
+              handleRating(i + 1);
             }}
             onHoverIn={() => setTempRating(i + 1)}
             onHoverOut={() => setTempRating(0)}

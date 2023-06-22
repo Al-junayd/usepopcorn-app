@@ -1,6 +1,6 @@
 import React from "react";
 
-export const WatchedSummary = ({ watched }) => {
+export default function WatchedSummary({ watched }) {
   const average = (arr) =>
     arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
   const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
@@ -17,7 +17,7 @@ export const WatchedSummary = ({ watched }) => {
         </p>
         <p>
           <span>⭐️</span>
-          <span>{avgImdbRating}</span>
+          <span>{avgImdbRating.toFixed(2)}</span>
         </p>
         <p>
           <span>🌟</span>
@@ -30,4 +30,4 @@ export const WatchedSummary = ({ watched }) => {
       </div>
     </div>
   );
-};
+}

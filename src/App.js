@@ -15,18 +15,26 @@ const KEY = "e5973e04";
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
+  // const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
 
+  const [watched, setWatched] = useState(function () {
+    const storedValue = localStorage.getItem("watched");
+    return JSON.parse(storedValue);
+  });
+
   useEffect(() => {
+    const controller = new AbortController();
+
     async function FetchMovies() {
       try {
         setIsLoading(true);
         setError("");
         const res = await fetch(
-          `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}`
+          `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}`,
+          { signal: controller.signal }
         );
         if (!res.ok) throw new Error("Something went wrong");
 
@@ -38,7 +46,9 @@ export default function App() {
         setError("");
       } catch (error) {
         console.error(error);
-        setError(error.message);
+        if (error.name !== "AbortError") {
+          setError(error.message);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -49,7 +59,12 @@ export default function App() {
       setError("");
       return;
     }
+    handleCloseMovie();
     FetchMovies();
+
+    return function () {
+      controller.abort();
+    };
   }, [query]);
 
   function handleSelectMovie(id) {
@@ -66,6 +81,10 @@ export default function App() {
   function handleDeleteWatched(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
+
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched]);
 
   return (
     <>

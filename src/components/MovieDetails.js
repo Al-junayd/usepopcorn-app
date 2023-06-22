@@ -31,6 +31,10 @@ export function MovieDetails({
     Director: director,
     Genre: genre,
   } = movie;
+  const isTop = imdbRating > 8;
+  console.log(isTop);
+
+  const [avgRating, setAvgRating] = useState(0);
 
   function handleAdd() {
     const newWatchedMovie = {
@@ -48,6 +52,19 @@ export function MovieDetails({
   }
 
   useEffect(() => {
+    function callback(e) {
+      if (e.code === "Escape") {
+        onCloseMovie();
+      }
+    }
+    document.addEventListener("keydown", callback);
+
+    return () => {
+      document.removeEventListener("keydown", callback);
+    };
+  }, [onCloseMovie]);
+
+  useEffect(() => {
     async function getMovieDetails() {
       setIsLoading(true);
       const res = await fetch(
@@ -60,6 +77,15 @@ export function MovieDetails({
     }
     getMovieDetails();
   }, [selectedId]);
+
+  useEffect(() => {
+    if (!title) return;
+    document.title = `Movie | ${title}`;
+
+    return function () {
+      document.title = "usePopcorn";
+    };
+  }, [title]);
 
   return (
     <div className="details">

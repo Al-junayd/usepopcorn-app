@@ -24,8 +24,8 @@ export function MovieDetails({
     if (userRating) count++;
   }, [userRating, count]);
 
-  const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
-  const watchedUserRating = watched.find(
+  const isWatched = watched?.map((movie) => movie.imdbID).includes(selectedId);
+  const watchedUserRating = watched?.find(
     (movie) => movie.imdbID === selectedId
   )?.userRating;
 
@@ -42,7 +42,7 @@ export function MovieDetails({
     Genre: genre,
   } = movie;
   const isTop = imdbRating > 8;
-  console.log(isTop);
+  // console.log(isTop);
 
   const [avgRating, setAvgRating] = useState(0);
 
@@ -60,6 +60,7 @@ export function MovieDetails({
 
     onAddWatched(newWatchedMovie);
     onCloseMovie();
+    console.log(newWatchedMovie);
   }
 
   useEffect(() => {

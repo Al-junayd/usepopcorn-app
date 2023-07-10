@@ -21,6 +21,7 @@ function Search({ query, setQuery }) {
 
   return (
     <input
+      disabled={false}
       className="search"
       type="text"
       placeholder="Search movies..."
